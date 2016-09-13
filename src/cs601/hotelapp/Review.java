@@ -42,23 +42,28 @@ public class Review implements Comparable<Review>{
 			Date date2 = sdf.parse(o.getDate());
 			
 			if(date1.compareTo(date2)>0){
-				System.out.println("date1 is after date2");
+				//System.out.println("date1 is after date2");
 				return date1.compareTo(date2); 
 			} else if (date1.compareTo(date2)<0) {
-				System.out.println("date1 is before date1");
+				//System.out.println("date1 is before date1");
 				return date1.compareTo(date2);
 			} else if (date1.compareTo(date2)==0) {
-				System.out.println("date1 is equal to date2");
-				return username.compareTo(o.getUsername());
+				//System.out.println("date1 is equal to date2");
+				if(username.compareTo(o.getUsername())==0){
+					return review_id.compareTo(o.getReview_id());
+				} else {
+					return username.compareTo(o.getUsername());
+				}
+				
 			} else {
-				System.out.println("Something is wrong with date!!!");
+				//System.out.println("Something is wrong with date!!!");
 			}
 			
 		} catch (ParseException  e) {
 			// TODO: handle exception
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("ParseException occured.");
 		}
-		
 		return 0;
 	}	
 	
