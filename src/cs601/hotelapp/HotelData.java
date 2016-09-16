@@ -34,9 +34,10 @@ public class HotelData {
 	private Address address;
 	private Review reviews;
 	private Boolean isSuccessful;
+	private List<String> hotelIdList;
 	
 	//TODO: all instance variables shoule be private and remove it if not be used
-	int count = 0;
+	
 
 	/**
 	 * Default constructor.
@@ -113,10 +114,7 @@ public class HotelData {
 		//Check the rating is in the correct range or not.
 		
 		//TODO: simplify if condition, since both >1 and <5 return false
-		if(1> rating) {
-			// set the false.
-			isSuccessful = false;
-		} else if (5 < rating) {
+		if(1> rating || 5 < rating) {
 			// set the false.
 			isSuccessful = false;
 		} else {
@@ -128,6 +126,7 @@ public class HotelData {
 				isSuccessful = true;
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
+				//e.printStackTrace();
 				System.out.println("Date is invalid!");
 			}
 		}
@@ -163,7 +162,7 @@ public class HotelData {
 		//Initialise an ArrayList to store hotelIds
 		
 		//TODO: you'd better put all data structures at the first place
-		List<String> hotelIdList = new ArrayList<>();
+		hotelIdList = new ArrayList<>();
 			
 		//Add hotelId to ArrayList
 		for (String hotelId: hotelsGivenByHotelId.keySet()){
@@ -200,14 +199,8 @@ public class HotelData {
 			JSONObject jsonObject = (JSONObject) object;
 			
 			String nameq = (String) jsonObject.get("q");
-			//System.out.println("qqqqqq" + nameq);
-			
 			String namerid = (String) jsonObject.get("rid");
-			//System.out.println("rrriiiddd" + namerid);
-			
 			String namerc = (String) jsonObject.get("rc");
-			//System.out.println("rrrccc" + namerc);
-			
 			JSONArray listOfHotel = (JSONArray) jsonObject.get("sr");
 			JSONObject jsonObjectHotel;
 			
@@ -216,34 +209,20 @@ public class HotelData {
 				
 				// Get hotelId.
 				String hotelId = (String) jsonObjectHotel.get("id");
-				//System.out.println(hotelId);
-				
 				// Get hotelName.
 				String hotelName = (String) jsonObjectHotel.get("f");
-				//System.out.println(hotelName);
-				
 				// Get hotelCity.
 				String hotelCity = (String) jsonObjectHotel.get("ci");
-				//System.out.println(hotelCity);
-				
 				// Get hotelState
 				String hotelState = (String) jsonObjectHotel.get("pr");
-				//System.out.println(hotelState);
-				
 				// Get hotelStreetAddress
 				String hotelStreetAddress = (String) jsonObjectHotel.get("ad");
-				//System.out.println(hotelStreetAddress);
-				
 				//Create jsonObjectHotelLL to get Lat and Lng
 				JSONObject jsonObjectHotelLL = (JSONObject) jsonObjectHotel.get("ll");
-				
 				// Get hotelLat
 				double hotelLat = Double.parseDouble((String) jsonObjectHotelLL.get("lat"));
-				//System.out.println(hotelLat);
-				
 				// Get hotelLon
 				double hotelLon = Double.parseDouble((String) jsonObjectHotelLL.get("lng"));
-				//System.out.println(hotelLon);
 				
 				// Add to the hotelsGivenByHotelId
 				addHotel(hotelId, hotelName, hotelCity, hotelState, hotelStreetAddress, hotelLat, hotelLon);
@@ -252,16 +231,13 @@ public class HotelData {
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("FileNotFoundException occured.");
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("IOException occured.");
+			e.printStackTrace();
 		} catch (org.json.simple.parser.ParseException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("org.json.simple.parser.ParseException occured.");
+			e.printStackTrace();
 		}
 	
 	}
@@ -292,9 +268,6 @@ public class HotelData {
 				// check that file is directory or not.
 				if(!Files.isDirectory(p)){
 					// If not, then this is a json. Add it as review
-					
-					//System.out.println("Directory degil " + p.toString());
-					
 					JSONParser jsonParser = new JSONParser();
 					try {
 						JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(p.toAbsolutePath().toString()));
@@ -310,26 +283,14 @@ public class HotelData {
 							reviewObject = (JSONObject) review.get(i);
 							
 							String hotelId = (String) reviewObject.get("hotelId");
-							//System.out.println(hotelId);
-							
 							String reviewId = (String) reviewObject.get("reviewId");
-							//System.out.println(reviewId);
-							
 							long ratingLong = (long) reviewObject.get("ratingOverall");
 							int rating = (int) ratingLong;
-							//System.out.println(rating);
-							
 							String reviewTitle = (String) reviewObject.get("title");
-							//System.out.println(reviewTitle);
-							
 							String reviewText = (String) reviewObject.get("reviewText");
-							//System.out.println(reviewText);
-							
 							boolean isRecom = ("YES" == (String) reviewObject.get("isRecommended"));
-							//System.out.println(isRecom);
-							
 							String date = (String) reviewObject.get("reviewSubmissionTime");
-							//System.out.println(date);
+							
 							
 							/*
 							JSONArray managementResponses = (JSONArray) reviewObject.get("managementResponses");
@@ -344,32 +305,24 @@ public class HotelData {
 							if(username.equals("")){
 								username = "anonymous";
 							}
-							//System.out.println(username);
-							
 							//Add review
 							addReview(hotelId, reviewId, rating, reviewTitle, reviewText, isRecom, date, username);
 						}
 					
 					} catch (org.json.simple.parser.ParseException e) {
 						// TODO Auto-generated catch block
-						//e.printStackTrace();
-						System.out.println("org.json.simple.parser.ParseException occured.");
+						e.printStackTrace();
 					}
-					
-					
-					//System.out.println("Directory degil " + p.toString());
 				} else if (Files.isDirectory(p)) {
 					// If it is, check the subfolders.
 					// this method get the paremeter path, and in it, check sub directories.
 					loadReviews(p);
-					//System.out.println("Directory " + p.toString());
 				}
 			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("IOException occurred");
+			e.printStackTrace();
 		}
 	
 
@@ -441,7 +394,6 @@ public class HotelData {
 	public void printToFile(Path filename) {
 		// FILL IN CODE
 
-		//System.out.println(filename.toString());
 		try {
 			PrintWriter printWriter = new PrintWriter(new FileWriter(filename.toString()));
 			
