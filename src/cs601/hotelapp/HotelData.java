@@ -34,6 +34,8 @@ public class HotelData {
 	private Address address;
 	private Review reviews;
 	private Boolean isSuccessful;
+	
+	//TODO: all instance variables shoule be private and remove it if not be used
 	int count = 0;
 
 	/**
@@ -109,6 +111,8 @@ public class HotelData {
 		//Initialise it to default value.
 		isSuccessful = false;
 		//Check the rating is in the correct range or not.
+		
+		//TODO: simplify if condition, since both >1 and <5 return false
 		if(1> rating) {
 			// set the false.
 			isSuccessful = false;
@@ -157,6 +161,8 @@ public class HotelData {
 	public List<String> getHotels() {
 		// FILL IN CODE
 		//Initialise an ArrayList to store hotelIds
+		
+		//TODO: you'd better put all data structures at the first place
 		List<String> hotelIdList = new ArrayList<>();
 			
 		//Add hotelId to ArrayList
@@ -451,3 +457,4 @@ public class HotelData {
 	}
 
 }
+//TODO: remove all System.out.print code if just for debugging
